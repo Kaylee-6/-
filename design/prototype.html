@@ -1,0 +1,949 @@
+<title>猫猫档案原型</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Noto+Sans+SC:wght@400;500;700&family=ZCOOL+KuaiLe&display=swap">
+<style>
+/* Layout: desktop = notes column + framed phone; phone width = notes banner + full-width app with a sticky tab bar */
+:root{
+  --bg:#FFF3F6; --app-bg:#FFF9FB; --surface:#FFFFFF; --surface-2:#FFE9EF; --line:#F3D3DE;
+  --ink:#3A2838; --ink-soft:#7D6479; --bezel:#3A2838; --scrim:rgba(40,20,35,.38);
+  --accent:#FF6F91; --accent-ink:#C02D57; --accent-soft:#FFDCE5;
+  --info:#3E8FD8; --info-soft:#DDEEFC; --butter:#F2B01E; --butter-soft:#FFF1CC; --mint:#21A47B; --mint-soft:#D9F4EA;
+  --ok:#1E9A72; --ok-soft:#D9F4EA; --warn:#B87700; --warn-soft:#FFEFC7; --bad:#D93650; --bad-soft:#FFDDE2;
+  --cat-a:#F2873A; --cat-a-soft:#FFE7D4; --cat-b:#8C6FE0; --cat-b-soft:#ECE6FF;
+  --fur-tz:#F7A35C; --fur-tz-dark:#D9732A; --fur-white:#FFFDFB; --fur-black:#2E2430; --fur-outline:rgba(58,40,56,.22);
+  --ear-pink:#FFB6C6; --nose:#FF8FA8; --blush:#FF8FA8; --eye:#2E2430; --whisker:#8A7386;
+  --shadow:0 6px 20px rgba(192,45,87,.09);
+  --font-display:'ZCOOL KuaiLe','Nunito','Noto Sans SC','PingFang SC','Microsoft YaHei',system-ui,sans-serif;
+  --font-body:'Nunito','Noto Sans SC','PingFang SC','Microsoft YaHei',system-ui,sans-serif;
+  --r-lg:22px; --r-md:16px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#1A1220; --app-bg:#211828; --surface:#2B2033; --surface-2:#36293F; --line:#46364F;
+  --ink:#F8EAF2; --ink-soft:#BFA6BA; --bezel:#0D080F; --scrim:rgba(5,2,8,.6);
+  --accent:#FF86A6; --accent-ink:#FFA3BB; --accent-soft:#4C2639;
+  --info:#6DB3F2; --info-soft:#1E3247; --butter:#FFD06B; --butter-soft:#3C311B; --mint:#4FD1AC; --mint-soft:#1C3A31;
+  --ok:#4FD1AC; --ok-soft:#1C3A31; --warn:#F4B63F; --warn-soft:#3E3018; --bad:#FF6B80; --bad-soft:#4A1D27;
+  --cat-a:#FF9D57; --cat-a-soft:#47301F; --cat-b:#AE97F5; --cat-b-soft:#342A52;
+  --shadow:0 6px 20px rgba(0,0,0,.35); color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#1A1220; --app-bg:#211828; --surface:#2B2033; --surface-2:#36293F; --line:#46364F;
+  --ink:#F8EAF2; --ink-soft:#BFA6BA; --bezel:#0D080F; --scrim:rgba(5,2,8,.6);
+  --accent:#FF86A6; --accent-ink:#FFA3BB; --accent-soft:#4C2639;
+  --info:#6DB3F2; --info-soft:#1E3247; --butter:#FFD06B; --butter-soft:#3C311B; --mint:#4FD1AC; --mint-soft:#1C3A31;
+  --ok:#4FD1AC; --ok-soft:#1C3A31; --warn:#F4B63F; --warn-soft:#3E3018; --bad:#FF6B80; --bad-soft:#4A1D27;
+  --cat-a:#FF9D57; --cat-a-soft:#47301F; --cat-b:#AE97F5; --cat-b-soft:#342A52;
+  --shadow:0 6px 20px rgba(0,0,0,.35); color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font:15px/1.6 var(--font-body);-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--font-display);font-weight:400;margin:0;text-wrap:balance;letter-spacing:.02em}
+p{margin:0}
+ul,ol{margin:0;padding:0;list-style:none}
+button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+.soft{color:var(--ink-soft)}
+.ico{width:1em;height:1em;display:inline-block;vertical-align:-.15em;flex:none}
+
+/* page */
+.page{max-width:1080px;margin:0 auto;display:grid;gap:20px;padding-block:20px 28px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.intro{display:grid;gap:14px;min-width:0}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.14em;color:var(--accent-ink)}
+.intro h1{font-size:clamp(36px,6vw,52px);line-height:1.1}
+.intro .lede{color:var(--ink-soft);max-width:30em}
+.note{background:var(--butter-soft);border-radius:var(--r-md);padding:12px 14px;font-size:14px;max-width:32em}
+.try{display:grid;gap:8px;font-size:14px;max-width:32em}
+.try li{display:flex;gap:8px}
+.try li::before{content:"";flex:none;width:8px;height:8px;margin-top:.55em;border-radius:50%;background:var(--accent)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:14px;font-weight:700}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:12px;height:12px;border-radius:4px;display:inline-block}
+
+/* phone */
+.phone{position:relative;background:var(--app-bg);border:1px solid var(--line);border-radius:28px;min-width:0;width:100%;max-width:440px;justify-self:center}
+.screens{padding:18px 14px 16px}
+.screen{display:grid;gap:14px}
+.tabbar{position:sticky;bottom:0;z-index:5;display:grid;grid-template-columns:repeat(5,1fr);background:var(--surface);border-top:1px solid var(--line);
+  padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));border-radius:0 0 28px 28px}
+.tab{border:0;background:none;display:grid;justify-items:center;gap:1px;padding:4px 0;font-size:11px;font-weight:700;color:var(--ink-soft);border-radius:14px}
+.tab .ico{font-size:22px;padding:3px 12px;box-sizing:content-box;border-radius:99px}
+.tab[aria-current="page"]{color:var(--accent-ink)}
+.tab[aria-current="page"] .ico{background:var(--accent-soft)}
+@media (min-width:900px){
+  .page{grid-template-columns:minmax(0,1fr) 420px;align-items:start;gap:56px;padding-block:44px}
+  .intro{position:sticky;top:44px;padding-top:24px}
+  .phone{height:min(860px,calc(100vh - 88px));min-height:620px;display:flex;flex-direction:column;border:10px solid var(--bezel);border-radius:46px;overflow:hidden;box-shadow:var(--shadow)}
+  .screens{flex:1;overflow-y:auto;overscroll-behavior:contain}
+  .tabbar{position:static;border-radius:0;padding-bottom:10px}
+  .overlay,.toast{position:absolute!important}
+}
+
+/* shared bits */
+.head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.head h2{font-size:26px;line-height:1.2}
+.hello{font-family:var(--font-display);font-size:24px;line-height:1.2}
+.sub{font-size:13px;color:var(--ink-soft)}
+.icon-btn{border:0;background:var(--surface);box-shadow:var(--shadow);width:40px;height:40px;border-radius:14px;display:grid;place-items:center;font-size:20px;flex:none}
+.card{background:var(--surface);border-radius:var(--r-lg);padding:14px 14px 16px;box-shadow:var(--shadow);display:grid;gap:10px;min-width:0}
+.card h3{font-size:18px;display:flex;align-items:center;gap:8px}
+.card h3 .right{margin-left:auto;font-family:var(--font-body);font-size:12px;font-weight:700;color:var(--ink-soft)}
+.pill{display:inline-block;font-size:12px;font-weight:800;border-radius:99px;padding:2px 10px;white-space:nowrap;line-height:1.6}
+.lv-bad{background:var(--bad-soft);color:var(--bad)}
+.lv-warn{background:var(--warn-soft);color:var(--warn)}
+.lv-ok{background:var(--ok-soft);color:var(--ok)}
+.lv-info{background:var(--info-soft);color:var(--info)}
+.live{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--ok)}
+.live::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px var(--ok-soft)}
+.seg{display:flex;background:var(--surface-2);border-radius:99px;padding:4px;gap:4px}
+.seg button{flex:1;border:0;background:transparent;border-radius:99px;padding:6px 8px;font-weight:800;color:var(--ink-soft);font-size:14px}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+.bar{height:8px;background:var(--surface-2);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:inherit;background:var(--mint)}
+.bar i.warn{background:var(--butter)}
+.bar i.bad{background:var(--bad)}
+
+/* cat face */
+.face{width:100%;height:100%;display:block}
+.f-tz{fill:var(--fur-tz);stroke:var(--fur-outline);stroke-width:1.5}
+.f-w{fill:var(--fur-white);stroke:var(--fur-outline);stroke-width:1.5}
+.f-b{fill:var(--fur-black)}
+.f-ear{fill:var(--ear-pink)}
+.f-eye{fill:var(--eye)}
+.f-hl{fill:var(--fur-white)}
+.f-nose{fill:var(--nose)}
+.f-blush{fill:var(--blush);opacity:.5}
+.f-line{stroke:var(--whisker);stroke-width:1.6;fill:none;stroke-linecap:round}
+.f-stripe{stroke:var(--fur-tz-dark);stroke-width:3.2;fill:none;stroke-linecap:round}
+.avatar{border-radius:50%;padding:8%;background:var(--cs);flex:none}
+
+/* home */
+.cats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cat-card{background:var(--surface);border-radius:var(--r-lg);box-shadow:var(--shadow);padding:14px 10px 12px;display:grid;justify-items:center;text-align:center;gap:4px;min-width:0}
+.cat-card .avatar{width:76px;height:76px}
+.cat-card .name{font-family:var(--font-display);font-size:22px;line-height:1.2;color:var(--c)}
+.cat-card .age{font-weight:800;font-size:15px}
+.cat-card .stage{font-size:12px;color:var(--ink-soft)}
+.today-row{display:flex;gap:6px;margin-top:4px;flex-wrap:wrap;justify-content:center}
+.today-row span{font-size:12px;font-weight:700;background:var(--cs);border-radius:99px;padding:1px 8px}
+.quick{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.qbtn{border:0;background:var(--surface);box-shadow:var(--shadow);border-radius:var(--r-lg);padding:12px 4px 10px;display:grid;justify-items:center;gap:4px;transition:transform .12s}
+.qbtn:active{transform:scale(.95)}
+.qbtn .bub{width:48px;height:48px;border-radius:18px;display:grid;place-items:center;font-size:26px}
+.qbtn b{font-size:15px}
+.qbtn small{font-size:11px;color:var(--ink-soft);line-height:1.3}
+.k-litter{background:var(--accent-soft);color:var(--accent-ink)}
+.k-water{background:var(--info-soft);color:var(--info)}
+.k-food{background:var(--butter-soft);color:var(--warn)}
+.k-clean{background:var(--mint-soft);color:var(--mint)}
+.rem li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 10px;align-items:start;padding:9px 0;border-top:1px dashed var(--line)}
+.rem li:first-child{border-top:0;padding-top:0}
+.rem .t{font-weight:700;font-size:14px;line-height:1.45}
+.rem .s{grid-column:2;font-size:12px;color:var(--ink-soft)}
+.tip{background:var(--butter-soft);box-shadow:none}
+.tip p{font-size:15px}
+.tip .meta{font-size:12px;color:var(--ink-soft)}
+.tip-actions{display:flex;gap:8px;flex-wrap:wrap}
+.ghost{border:1.5px solid var(--line);background:var(--surface);border-radius:99px;padding:4px 12px;font-size:13px;font-weight:700}
+.feed li{display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;align-items:center;padding:7px 6px;border-radius:14px}
+.feed .dot{width:34px;height:34px;border-radius:12px;display:grid;place-items:center;font-size:18px}
+.feed .w{font-size:12px;color:var(--ink-soft)}
+.feed .x{font-weight:700;font-size:14px}
+.feed li.new{animation:flash 2.4s ease-out}
+@keyframes flash{from{background:var(--accent-soft)}to{background:transparent}}
+
+/* charts */
+.chart svg{width:100%;height:auto;display:block}
+.gl{stroke:var(--line);stroke-width:1}
+.ax{fill:var(--ink-soft);font-size:10px;font-family:var(--font-body)}
+.ax.now{fill:var(--ink);font-weight:800}
+.val{fill:var(--ink-soft);font-size:9px;font-weight:700;font-family:var(--font-body)}
+.b-tz{fill:var(--cat-a)} .b-ng{fill:var(--cat-b)} .b-water{fill:var(--info)} .b-tok{fill:var(--accent)}
+.part{opacity:.5}
+.band{fill:var(--info-soft)}
+.band-t{fill:var(--info);font-size:9px;font-weight:700;font-family:var(--font-body)}
+.ln-tz{stroke:var(--cat-a);stroke-width:2.5;fill:none;stroke-linejoin:round;stroke-linecap:round}
+.ln-ng{stroke:var(--cat-b);stroke-width:2.5;fill:none;stroke-linejoin:round;stroke-linecap:round}
+.dt-tz{fill:var(--cat-a)} .dt-ng{fill:var(--cat-b)}
+.end{fill:var(--ink);font-size:11px;font-weight:800;font-family:var(--font-body)}
+.keys{display:flex;gap:14px;font-size:12px;font-weight:700;color:var(--ink-soft);flex-wrap:wrap}
+.keys span{display:inline-flex;align-items:center;gap:5px}
+.checks li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:start;font-size:14px;padding:6px 0}
+.maint{display:grid;gap:12px}
+.maint .row{display:grid;gap:5px}
+.maint .row div:first-child{display:flex;justify-content:space-between;gap:8px;font-size:14px;font-weight:700}
+.maint .row span.soft{font-weight:600;font-size:12px}
+.fineprint{font-size:12px;color:var(--ink-soft)}
+
+/* health */
+.hl li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;align-items:center;padding:10px 0;border-top:1px dashed var(--line)}
+.hl li:first-child{border-top:0;padding-top:2px}
+.hl .t{font-weight:800}
+.hl .s{font-size:12px;color:var(--ink-soft);grid-column:1}
+.hl .pill{grid-row:1 / span 2;grid-column:2}
+.upload{border:2px dashed var(--line);background:transparent;border-radius:var(--r-lg);padding:16px;display:grid;justify-items:center;gap:4px;text-align:center;color:var(--ink-soft);font-size:13px}
+.upload b{color:var(--ink);font-size:15px}
+.upload .ico{font-size:28px;color:var(--accent)}
+
+/* cat profile */
+.prof{display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px;align-items:center}
+.prof .avatar{width:92px;height:92px}
+.prof .name{font-family:var(--font-display);font-size:30px;line-height:1.1;color:var(--c)}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;margin:0}
+.facts div{min-width:0}
+.facts dt{font-size:12px;color:var(--ink-soft)}
+.facts dd{margin:0;font-weight:700;font-size:14px;overflow-wrap:anywhere}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{background:var(--cs);border-radius:99px;padding:3px 11px;font-size:13px;font-weight:700}
+.tag.no{background:var(--surface-2);color:var(--ink-soft)}
+.grp{display:grid;gap:6px}
+.grp h4{font-family:var(--font-body);font-size:12px;font-weight:800;color:var(--ink-soft);letter-spacing:.06em}
+
+/* tips */
+.filters{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.chip{border:1.5px solid var(--line);background:var(--surface);border-radius:99px;padding:5px 13px;font-weight:700;font-size:13px;white-space:nowrap}
+.chip[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-ink)}
+.lib li{display:grid;gap:4px;padding:10px 0;border-top:1px dashed var(--line)}
+.lib li:first-child{border-top:0;padding-top:0}
+.lib .src{font-size:12px;color:var(--ink-soft)}
+.mine li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;align-items:start;font-size:14px}
+.mine .dot{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-size:16px}
+.big{font-size:30px;font-weight:800;line-height:1.1}
+.tokrow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.tokrow div{background:var(--surface-2);border-radius:14px;padding:8px 10px;min-width:0}
+.tokrow b{display:block;font-size:17px;font-weight:800}
+.tokrow span{font-size:11px;color:var(--ink-soft)}
+.feat li{display:grid;grid-template-columns:5.5em minmax(0,1fr) auto;gap:8px;align-items:center;font-size:13px;padding:3px 0}
+.feat .bar i{background:var(--accent)}
+.calls{width:100%;border-collapse:collapse;font-size:12px}
+.calls th{text-align:left;font-weight:700;color:var(--ink-soft);padding:4px 4px 4px 0}
+.calls td{padding:5px 4px 5px 0;border-top:1px dashed var(--line);white-space:nowrap}
+.calls td:last-child,.calls th:last-child{text-align:right;padding-right:0}
+.scroll-x{overflow-x:auto}
+
+/* settings */
+.set li{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;border-top:1px dashed var(--line);font-size:14px}
+.set li:first-child{border-top:0;padding-top:0}
+.sw-t{width:42px;height:26px;border-radius:99px;background:var(--surface-2);border:0;position:relative;flex:none}
+.sw-t::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:var(--surface);box-shadow:0 1px 3px var(--scrim);transition:transform .15s}
+.sw-t[aria-checked="true"]{background:var(--mint)}
+.sw-t[aria-checked="true"]::after{transform:translateX(16px)}
+.who{display:flex;align-items:center;gap:10px}
+.who i{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:800;background:var(--accent-soft);color:var(--accent-ink)}
+
+/* sheet + toast */
+.overlay{position:fixed;inset:0;z-index:40;background:var(--scrim);display:flex;align-items:flex-end}
+.sheet{width:100%;background:var(--app-bg);border-radius:26px 26px 0 0;max-height:88%;overflow-y:auto;display:grid;gap:14px;
+  padding:10px max(18px,env(safe-area-inset-right,0px)) calc(18px + env(safe-area-inset-bottom,0px)) max(18px,env(safe-area-inset-left,0px))}
+.grab{width:40px;height:5px;border-radius:9px;background:var(--line);justify-self:center}
+.sheet h3{font-size:22px}
+.field{display:grid;gap:6px}
+.field>span{font-size:12px;font-weight:800;color:var(--ink-soft);letter-spacing:.06em}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.stepper{display:flex;align-items:center;gap:8px}
+.stepper button{width:38px;height:38px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);font-size:18px;font-weight:800}
+.stepper input{width:90px;height:38px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);text-align:center;font:inherit;font-weight:800}
+.primary{border:0;background:var(--accent);color:var(--surface);font-weight:800;font-size:16px;border-radius:16px;padding:12px}
+.toast{position:fixed;left:50%;bottom:calc(88px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:60;background:var(--ink);color:var(--bg);
+  border-radius:99px;padding:9px 18px;font-weight:700;font-size:14px;max-width:calc(100% - 32px);text-align:center;box-shadow:var(--shadow)}
+.toast.bad{background:var(--bad);color:var(--surface)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-paw" viewBox="0 0 24 24"><g fill="currentColor"><ellipse cx="12" cy="16" rx="5.2" ry="4.2"/><circle cx="5.8" cy="10" r="2.1"/><circle cx="9.6" cy="6.3" r="2.1"/><circle cx="14.4" cy="6.3" r="2.1"/><circle cx="18.2" cy="10" r="2.1"/></g></symbol>
+  <symbol id="i-box" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18l-1.8 8H4.8z"/><path d="M6 11c.8-2.4 3.4-3.6 6-3.6s5.2 1.2 6 3.6"/><path d="M15.5 5.5l2-2"/></g></symbol>
+  <symbol id="i-drop" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.8c3.6 4.6 6.2 7.8 6.2 11.2a6.2 6.2 0 0 1-12.4 0c0-3.4 2.6-6.6 6.2-11.2z"/></symbol>
+  <symbol id="i-bowl" viewBox="0 0 24 24"><g fill="currentColor"><path d="M2.5 12h19a9.5 7 0 0 1-19 0z"/><circle cx="8" cy="10" r="1.7"/><circle cx="12" cy="9" r="1.7"/><circle cx="16" cy="10" r="1.7"/></g></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M5 20v-8M12 20V5M19 20v-5"/></g></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path fill="currentColor" d="M12 20.5s-7.5-4.6-7.5-10.4A4.3 4.3 0 0 1 12 7.3a4.3 4.3 0 0 1 7.5 2.8c0 5.8-7.5 10.4-7.5 10.4z"/></symbol>
+  <symbol id="i-cat" viewBox="0 0 24 24"><path fill="currentColor" d="M4 14V3.8l4.7 3.6a9 9 0 0 1 6.6 0L20 3.8V14a8 7.4 0 0 1-16 0z"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.5l2.2 6.3 6.3 2.2-6.3 2.2L12 19.5l-2.2-6.3L3.5 11l6.3-2.2zM19 16l.9 2.1L22 19l-2.1.9L19 22l-.9-2.1L16 19l2.1-.9z"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.6M12 18.6v2.6M2.8 12h2.6M18.6 12h2.6M5.5 5.5l1.9 1.9M16.6 16.6l1.9 1.9M5.5 18.5l1.9-1.9M16.6 7.4l1.9-1.9"/></g></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 8h4l2-3h6l2 3h4v11H3z"/><circle cx="12" cy="13" r="3.5"/></g></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M15 5l-7 7 7 7"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><g fill="currentColor"><path d="M12 3l10 17H2z" opacity=".25"/><rect x="11" y="9" width="2" height="6" rx="1"/><circle cx="12" cy="17.3" r="1.2"/></g></symbol>
+</svg>
+
+<div class="page">
+  <section class="intro">
+    <p class="eyebrow">设计稿 v0.1</p>
+    <h1>猫猫档案</h1>
+    <p class="lede">给家里两只猫做的网站：档案和年龄、疫苗驱虫、猫砂和饮水机记录、每天联网更新的小贴士，全家实时同步。手机上打开就像一个 App。</p>
+    <p class="note"><strong>这里全是示例数据。</strong>「团子」「年糕」是占位名字，生日、疫苗日期、次数都是编的。你把真实资料发我以后再换成你们家的猫。</p>
+    <ul class="try">
+      <li>底部 5 个标签切换页面，首页右上角的齿轮是设置。</li>
+      <li>首页点「猫砂盆」，异常里选「尿不出 / 很少」，看看急症提醒长什么样。</li>
+      <li>随便记几笔，猫咪卡片、图表和家庭动态都会跟着变。记录只存在这个页面里，刷新就没了。</li>
+      <li>「贴士」页最下面是 AI 用了多少 token。</li>
+    </ul>
+    <div class="legend"><span><i class="sw" style="background:var(--cat-a)"></i>团子</span><span><i class="sw" style="background:var(--cat-b)"></i>年糕</span></div>
+  </section>
+
+  <div class="phone" id="phone">
+    <div class="screens" id="screens">
+
+      <!-- 今天 -->
+      <section class="screen" id="s-home">
+        <div class="head">
+          <div>
+            <p class="hello" id="hello">你好，铲屎官</p>
+            <p class="sub" id="today-line"></p>
+          </div>
+          <button class="icon-btn" data-go="settings" aria-label="设置"><svg class="ico"><use href="#i-gear"/></svg></button>
+        </div>
+        <p class="live">妈妈 · 爸爸 在线，记录实时同步</p>
+        <div class="cats" id="cat-cards"></div>
+        <div class="quick">
+          <button class="qbtn" data-sheet="litter"><span class="bub k-litter"><svg class="ico"><use href="#i-box"/></svg></span><b>猫砂盆</b><small>如厕 · 铲屎</small></button>
+          <button class="qbtn" data-sheet="water"><span class="bub k-water"><svg class="ico"><use href="#i-drop"/></svg></span><b>饮水机</b><small>换水 · 滤芯</small></button>
+          <button class="qbtn" data-sheet="food"><span class="bub k-food"><svg class="ico"><use href="#i-bowl"/></svg></span><b>喂饭</b><small>干粮 · 湿粮</small></button>
+        </div>
+        <div class="card">
+          <h3>要留意的事 <span class="right" id="rem-count"></span></h3>
+          <ul class="rem" id="reminders"></ul>
+        </div>
+        <div class="card tip">
+          <h3><svg class="ico" style="color:var(--warn)"><use href="#i-spark"/></svg>今日小贴士</h3>
+          <p>天冷开了暖气，屋里会变干。家里这周饮水量平稳，可以在卧室再放一个水碗，或者往湿粮里加一勺温水，让两只多喝一点。</p>
+          <p class="meta">AI 根据两只猫的年龄、最近 7 天记录和天气生成 · 今天共用了 1,236 tokens · 示例</p>
+          <div class="tip-actions"><button class="ghost" data-toast="收到，以后多推这类">有用</button><button class="ghost" data-go="tips">更多贴士</button></div>
+        </div>
+        <div class="card">
+          <h3>家庭动态 <span class="right live">实时</span></h3>
+          <ol class="feed" id="feed"></ol>
+        </div>
+      </section>
+
+      <!-- 记录 -->
+      <section class="screen" id="s-records" hidden>
+        <div class="head"><h2>记录</h2><span class="sub">最近 7 天</span></div>
+        <div class="card chart">
+          <h3>如厕次数 <span class="right">小便 + 大便</span></h3>
+          <div id="litter-chart"></div>
+          <div class="keys"><span><i class="sw" style="background:var(--cat-a)"></i>团子</span><span><i class="sw" style="background:var(--cat-b)"></i>年糕</span><span>今天的柱子颜色浅一些，因为还没过完</span></div>
+        </div>
+        <div class="card chart">
+          <h3>饮水机加水量 <span class="right">ml / 天</span></h3>
+          <div id="water-chart"></div>
+          <p class="fineprint">蓝色区间：两只合计 9.3 kg × 每公斤 40–60 ml ≈ 370–560 ml。湿粮里的水也算在内，所以吃湿粮多的话，饮水机这边会少一些。</p>
+        </div>
+        <div class="card">
+          <h3>健康检查 <span class="right">只提醒，不诊断</span></h3>
+          <ul class="checks" id="checks"></ul>
+        </div>
+        <div class="card">
+          <h3>维护进度</h3>
+          <div class="maint" id="maint"></div>
+        </div>
+      </section>
+
+      <!-- 健康 -->
+      <section class="screen" id="s-health" hidden>
+        <div class="head"><h2>健康本</h2></div>
+        <div class="seg" data-switch="health"><button aria-pressed="true" data-cat="tz">团子</button><button aria-pressed="false" data-cat="ng">年糕</button></div>
+        <div class="card"><h3>疫苗</h3><ul class="hl" id="h-vacc"></ul></div>
+        <div class="card"><h3>驱虫</h3><ul class="hl" id="h-worm"></ul></div>
+        <div class="card"><h3>体检和就诊</h3><ul class="hl" id="h-visit"></ul></div>
+        <button class="upload" data-toast="正式版：拍照后由 AI 识别成疫苗记录，你确认后保存"><svg class="ico"><use href="#i-camera"/></svg><b>拍疫苗本</b>拍一张照片，自动识别疫苗名、日期和批号</button>
+        <p class="fineprint">默认间隔参考 AAHA/AAFP 2020 猫疫苗指南，每一项都能改，以你们的兽医为准。</p>
+      </section>
+
+      <!-- 猫咪 -->
+      <section class="screen" id="s-cats" hidden>
+        <div class="head"><h2>猫咪</h2></div>
+        <div class="seg" data-switch="profile"><button aria-pressed="true" data-cat="tz">团子</button><button aria-pressed="false" data-cat="ng">年糕</button></div>
+        <div id="profile" class="screen"></div>
+      </section>
+
+      <!-- 贴士 -->
+      <section class="screen" id="s-tips" hidden>
+        <div class="head"><h2>小贴士</h2><span class="sub">每天早上 7 点更新</span></div>
+        <div class="card tip">
+          <h3><svg class="ico" style="color:var(--warn)"><use href="#i-spark"/></svg>今天给你们家的</h3>
+          <ul class="mine" id="mine"></ul>
+          <p class="meta">AI 生成，仅供参考，不能代替兽医 · 示例</p>
+        </div>
+        <div class="filters" id="filters"></div>
+        <div class="card"><ul class="lib" id="lib"></ul></div>
+        <div class="card" id="tokens">
+          <h3>AI 用了多少 token <span class="right">10 月 · 示例</span></h3>
+          <div><span class="big num" id="tok-month"></span> <span class="soft">/ 200,000 本月预算</span></div>
+          <div class="bar"><i id="tok-bar"></i></div>
+          <div class="tokrow">
+            <div><b class="num">1,236</b><span>今天</span></div>
+            <div><b class="num" id="tok-avg"></b><span>日均</span></div>
+            <div><b class="num">≈ ¥0.9</b><span>本月费用</span></div>
+          </div>
+          <div class="chart" id="tok-chart"></div>
+          <ul class="feat" id="tok-feat"></ul>
+          <div class="scroll-x"><table class="calls num" id="tok-calls"></table></div>
+          <p class="fineprint">每次调用都会记下输入、输出 token。费用按设置里的单价折算。用到预算 80% 会提醒，用完自动暂停 AI 功能。</p>
+        </div>
+      </section>
+
+      <!-- 设置 -->
+      <section class="screen" id="s-settings" hidden>
+        <div class="head"><button class="icon-btn" data-go="home" aria-label="返回"><svg class="ico"><use href="#i-back"/></svg></button><h2 style="margin-right:auto">设置</h2></div>
+        <div class="card"><h3>家庭成员</h3>
+          <ul class="set">
+            <li><span class="who"><i>妈</i>妈妈</span><span class="pill lv-info">管理员</span></li>
+            <li><span class="who"><i>爸</i>爸爸</span><span class="pill lv-ok">在线</span></li>
+            <li><span class="who"><i>+</i>邀请家人</span><span class="soft">发个链接就行</span></li>
+          </ul>
+        </div>
+        <div class="card"><h3>提醒发到哪</h3>
+          <ul class="set">
+            <li>手机推送（添加到主屏幕后）<button class="sw-t" role="switch" aria-checked="true" aria-label="手机推送"></button></li>
+            <li>企业微信群机器人<button class="sw-t" role="switch" aria-checked="true" aria-label="企业微信群机器人"></button></li>
+            <li>邮件<button class="sw-t" role="switch" aria-checked="false" aria-label="邮件"></button></li>
+            <li>每天提醒时间<span class="num">09:00</span></li>
+          </ul>
+        </div>
+        <div class="card"><h3>猫砂盆和饮水机</h3>
+          <ul class="set">
+            <li>猫砂盆 A · 客厅<span class="soft">结团砂 · 14 天全换</span></li>
+            <li>猫砂盆 B · 卫生间<span class="soft">结团砂 · 14 天全换</span></li>
+            <li>猫砂盆 C · 阳台<span class="soft">豆腐砂 · 10 天全换</span></li>
+            <li>饮水机 · 客厅<span class="soft">7 天清洗 · 30 天换滤芯</span></li>
+          </ul>
+          <p class="fineprint">两只猫建议 3 个猫砂盆（猫数量 + 1）。每个都能贴一张 NFC 贴纸，手机一碰就打开记录。</p>
+        </div>
+        <div class="card"><h3>AI</h3>
+          <ul class="set">
+            <li>每日小贴士<button class="sw-t" role="switch" aria-checked="true" aria-label="每日小贴士"></button></li>
+            <li>每周健康小结<button class="sw-t" role="switch" aria-checked="true" aria-label="每周健康小结"></button></li>
+            <li>每月 token 预算<span class="num">200,000</span></li>
+          </ul>
+        </div>
+      </section>
+    </div>
+
+    <nav class="tabbar" aria-label="页面">
+      <button class="tab" data-tab="home" aria-current="page"><svg class="ico"><use href="#i-paw"/></svg>今天</button>
+      <button class="tab" data-tab="records"><svg class="ico"><use href="#i-chart"/></svg>记录</button>
+      <button class="tab" data-tab="health"><svg class="ico"><use href="#i-heart"/></svg>健康</button>
+      <button class="tab" data-tab="cats"><svg class="ico"><use href="#i-cat"/></svg>猫咪</button>
+      <button class="tab" data-tab="tips"><svg class="ico"><use href="#i-spark"/></svg>贴士</button>
+    </nav>
+
+    <div class="overlay" id="overlay" hidden>
+      <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+        <span class="grab"></span>
+        <h3 id="sheet-title"></h3>
+
+        <div data-form="litter" hidden class="screen">
+          <div class="seg" data-single="lt-mode"><button aria-pressed="true" data-v="use">猫上厕所</button><button aria-pressed="false" data-v="scoop">我铲屎了</button><button aria-pressed="false" data-v="change">全换猫砂</button></div>
+          <div class="screen" id="lt-use">
+            <div class="field"><span>是谁</span><div class="chips" data-single="lt-who"><button class="chip" aria-pressed="true" data-v="tz">团子</button><button class="chip" aria-pressed="false" data-v="ng">年糕</button><button class="chip" aria-pressed="false" data-v="unknown">不确定</button></div></div>
+            <div class="field"><span>是什么</span><div class="chips" data-single="lt-type"><button class="chip" aria-pressed="true" data-v="pee">小便</button><button class="chip" aria-pressed="false" data-v="poop">大便</button><button class="chip" aria-pressed="false" data-v="both">都有</button></div></div>
+            <div class="field" id="lt-size-f"><span>尿团大小</span><div class="chips" data-single="lt-size"><button class="chip" aria-pressed="false" data-v="小团">小</button><button class="chip" aria-pressed="true" data-v="中团">中</button><button class="chip" aria-pressed="false" data-v="大团">大</button></div></div>
+            <div class="field" id="lt-stool-f" hidden><span>大便状态</span><div class="chips" data-single="lt-stool"><button class="chip" aria-pressed="true" data-v="正常">正常</button><button class="chip" aria-pressed="false" data-v="偏软">偏软</button><button class="chip" aria-pressed="false" data-v="拉稀">拉稀</button><button class="chip" aria-pressed="false" data-v="偏硬">偏硬</button></div></div>
+            <div class="field"><span>有没有异常（可多选）</span><div class="chips" data-multi="lt-flags"><button class="chip" aria-pressed="false" data-v="strain">使劲很久</button><button class="chip" aria-pressed="false" data-v="block">尿不出 / 很少</button><button class="chip" aria-pressed="false" data-v="blood">有血</button><button class="chip" aria-pressed="false" data-v="outside">在盆外</button></div></div>
+          </div>
+          <div class="field"><span>哪个猫砂盆</span><div class="chips" data-single="lt-box"><button class="chip" aria-pressed="true" data-v="客厅">客厅</button><button class="chip" aria-pressed="false" data-v="卫生间">卫生间</button><button class="chip" aria-pressed="false" data-v="阳台">阳台</button></div></div>
+        </div>
+
+        <div data-form="water" hidden class="screen">
+          <div class="seg" data-single="wt-mode"><button aria-pressed="true" data-v="add">加水</button><button aria-pressed="false" data-v="change">换水</button><button aria-pressed="false" data-v="clean">清洗</button><button aria-pressed="false" data-v="filter">换滤芯</button></div>
+          <div class="field" id="wt-ml-f"><span>加了多少水</span>
+            <div class="stepper"><button type="button" data-step="water-ml" data-d="-50" aria-label="少 50 毫升">−</button><input id="water-ml" type="number" inputmode="numeric" value="300" min="0" step="50" aria-label="毫升"><span class="soft">ml</span><button type="button" data-step="water-ml" data-d="50" aria-label="多 50 毫升">+</button></div>
+          </div>
+          <p class="fineprint">两只猫共用饮水机，分不清谁喝的，所以记全家总量。每次加水时记一下，系统按天算。</p>
+        </div>
+
+        <div data-form="food" hidden class="screen">
+          <div class="field"><span>给谁</span><div class="chips" data-single="fd-who"><button class="chip" aria-pressed="true" data-v="both">两只</button><button class="chip" aria-pressed="false" data-v="tz">团子</button><button class="chip" aria-pressed="false" data-v="ng">年糕</button></div></div>
+          <div class="field"><span>吃什么</span><div class="chips" data-single="fd-type"><button class="chip" aria-pressed="false" data-v="干粮">干粮</button><button class="chip" aria-pressed="true" data-v="湿粮">湿粮</button><button class="chip" aria-pressed="false" data-v="零食">零食</button></div></div>
+          <div class="field"><span>多少克</span>
+            <div class="stepper"><button type="button" data-step="food-g" data-d="-5" aria-label="少 5 克">−</button><input id="food-g" type="number" inputmode="numeric" value="85" min="0" step="5" aria-label="克"><span class="soft">g</span><button type="button" data-step="food-g" data-d="5" aria-label="多 5 克">+</button></div>
+          </div>
+        </div>
+
+        <button class="primary" id="sheet-save">记好了</button>
+      </div>
+    </div>
+    <div class="toast" id="toast" role="status" hidden></div>
+  </div>
+</div>
+
+<script>
+const $ = (s, r = document) => r.querySelector(s)
+const $$ = (s, r = document) => [...r.querySelectorAll(s)]
+const DAY = 864e5
+const now = new Date()
+const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+const day = n => new Date(today.getTime() + n * DAY)
+const fmtDate = d => `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`
+const fmtMD = d => `${d.getMonth() + 1}月${d.getDate()}日`
+const WEEK = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
+const nf = n => n.toLocaleString('en-US')
+const icon = id => `<svg class="ico"><use href="#i-${id}"/></svg>`
+
+// ---- 示例数据 ----
+const CATS = {
+  tz: { name: '团子', sex: '公', birthday: new Date(2023, 6, 20), home: new Date(2023, 8, 30), breed: '橘白田园猫', chip: '示例 1560 0000 0001',
+    food: '鸡肉干粮 + 每天 1 罐湿粮', motto: '稳重干饭王', weight: [5.1, 5.2, 5.3, 5.3, 5.4, 5.4],
+    likes: ['羽毛逗猫棒', '纸箱', '窗台看鸟', '冻干鸡胸'], dislikes: ['吹风机', '剪指甲', '门铃'], traits: ['贪吃', '话少', '爱晒太阳'],
+    play: '伏击型：喜欢躲在纸箱里突然扑出来',
+    ai: '团子是伏击型：把羽毛逗猫棒藏在纸箱边，慢慢露出一点点，让它埋伏、扑、抓到。每天 2 次、每次 10–15 分钟，玩完给几粒冻干当战利品。' },
+  ng: { name: '年糕', sex: '母', birthday: new Date(2025, 2, 2), home: new Date(2025, 4, 18), breed: '奶牛猫', chip: '示例 1560 0000 0002',
+    food: '成猫粮 + 隔天 1 罐湿粮', motto: '社牛小跟班', weight: [3.4, 3.5, 3.6, 3.7, 3.8, 3.9],
+    likes: ['弹簧玩具', '钻被窝', '追团子尾巴', '猫草'], dislikes: ['航空箱', '洗澡'], traits: ['好奇', '黏人', '精力旺盛'],
+    play: '追逐型：什么东西跑起来就追',
+    ai: '年糕是追逐型，精力旺盛：把弹簧玩具往走廊远处弹，让它冲刺几个来回。睡前玩一轮，半夜跑酷会少一点。' }
+}
+const HEALTH = {
+  tz: {
+    vacc: [
+      { name: '猫三联', dose: '成年加强针', last: -430, every: 1095, where: '示例宠物医院' },
+      { name: '狂犬疫苗', dose: '年度加强', last: -320, every: 365, where: '示例宠物医院' }
+    ],
+    worm: [
+      { name: '体内驱虫', dose: '每 3 个月', last: -50, every: 90 },
+      { name: '体外驱虫', dose: '每月', last: -27, every: 30 }
+    ],
+    visit: [
+      { name: '年度体检', note: '血常规、生化正常 · 5.3 kg', at: -220 },
+      { name: '绝育', note: '恢复良好', at: -900 }
+    ]
+  },
+  ng: {
+    vacc: [
+      { name: '猫三联', dose: '6 月龄加强针（幼猫基础免疫已完成）', last: -395, every: 1095, where: '示例宠物医院' },
+      { name: '狂犬疫苗', dose: '首针', last: -353, every: 365, where: '示例宠物医院' },
+      { name: '猫白血病', dose: '幼猫 2 针', last: -470, every: null, where: '不出门，医生说成年后不用再打' }
+    ],
+    worm: [
+      { name: '体内驱虫', dose: '每 3 个月', last: -40, every: 90 },
+      { name: '体外驱虫', dose: '每月', last: -33, every: 30 }
+    ],
+    visit: [
+      { name: '软便就诊', note: '换粮太快引起，3 天好转', at: -120 },
+      { name: '绝育', note: '恢复良好', at: -390 }
+    ]
+  }
+}
+
+const S = {
+  litter: { tz: { pee: 2, poop: 1 }, ng: { pee: 2, poop: 0 }, unknown: { pee: 0, poop: 0 } },
+  water: 260,
+  maint: { scoopAt: Date.now() - 210 * 6e4, litterDays: 11, litterEvery: 14, cleanDays: 4, cleanEvery: 7, filterDays: 26, filterEvery: 30 },
+  alerts: [],
+  feed: [
+    { ago: 28, who: '妈妈', kind: 'litter', text: '团子 · 小便 · 中团' },
+    { ago: 95, who: '爸爸', kind: 'food', text: '两只 · 湿粮 85 g' },
+    { ago: 160, who: '妈妈', kind: 'litter', text: '年糕 · 小便 · 小团' },
+    { ago: 210, who: '爸爸', kind: 'clean', text: '铲屎 · 3 个猫砂盆' },
+    { ago: 250, who: '爸爸', kind: 'water', text: '饮水机加水 260 ml' },
+    { ago: 300, who: '妈妈', kind: 'litter', text: '团子 · 大便 · 正常' },
+    { ago: 330, who: '妈妈', kind: 'litter', text: '年糕 · 小便 · 中团' },
+    { ago: 420, who: '妈妈', kind: 'litter', text: '团子 · 小便 · 大团' }
+  ].map(f => ({ ...f, at: Date.now() - f.ago * 6e4 })),
+  healthCat: 'tz', profileCat: 'tz', tipTopic: '全部'
+}
+
+// ---- 年龄 ----
+function ageOf(b) {
+  let m = (today.getFullYear() - b.getFullYear()) * 12 + today.getMonth() - b.getMonth()
+  if (today.getDate() < b.getDate()) m--
+  return { y: Math.floor(m / 12), m: m % 12, total: m }
+}
+function humanAge(months) {
+  const y = months / 12
+  if (y <= 1) return Math.round(y * 15)
+  if (y <= 2) return Math.round(15 + (y - 1) * 9)
+  return Math.round(24 + (y - 2) * 4)
+}
+function stageOf(months) {
+  const y = months / 12
+  return y < 1 ? '幼猫期' : y < 7 ? '青年期' : y <= 10 ? '成熟期' : '老年期'
+}
+const ageText = a => a.y ? `${a.y} 岁${a.m ? ` ${a.m} 个月` : ''}` : `${a.m} 个月`
+
+// ---- 猫脸 ----
+function catFace(id) {
+  const tz = id === 'tz'
+  const head = tz ? 'f-tz' : 'f-w'
+  return `<svg viewBox="0 0 100 100" class="face" aria-hidden="true">
+    <path d="M14 50 L19 9 L46 30 Z" class="${head}"/><path d="M86 50 L81 9 L54 30 Z" class="${head}"/>
+    <path d="M22 38 L24 19 L38 31 Z" class="f-ear"/><path d="M78 38 L76 19 L62 31 Z" class="f-ear"/>
+    <ellipse cx="50" cy="58" rx="40" ry="33" class="${head}"/>
+    ${tz
+      ? '<path d="M50 27v9M40 29l2.5 7M60 29l-2.5 7" class="f-stripe"/><ellipse cx="50" cy="72" rx="17" ry="12" class="f-w"/>'
+      : '<path d="M14 54C13 38 27 27 47 26c0 9-5 17-17 19-7 1-12 5-16 9z" class="f-b"/><ellipse cx="59" cy="72" rx="4.5" ry="2.6" class="f-b"/>'}
+    <ellipse cx="35" cy="56" rx="4.6" ry="5.6" class="f-eye"/><circle cx="36.6" cy="53.8" r="1.6" class="f-hl"/>
+    <ellipse cx="65" cy="56" rx="4.6" ry="5.6" class="f-eye"/><circle cx="66.6" cy="53.8" r="1.6" class="f-hl"/>
+    <ellipse cx="25" cy="67" rx="6" ry="3.5" class="f-blush"/><ellipse cx="75" cy="67" rx="6" ry="3.5" class="f-blush"/>
+    <path d="M46 64h8l-4 4z" class="f-nose"/>
+    <path d="M50 68q-3 5-7 3M50 68q3 5 7 3" class="f-line"/>
+    <path d="M31 68L9 64M31 71L10 75M69 68l22-4M69 71l21 4" class="f-line"/>
+  </svg>`
+}
+const catVars = id => id === 'tz' ? '--c:var(--cat-a);--cs:var(--cat-a-soft)' : '--c:var(--cat-b);--cs:var(--cat-b-soft)'
+
+// ---- 首页 ----
+function renderHome() {
+  const h = now.getHours()
+  $('#hello').textContent = (h < 5 ? '夜深了' : h < 11 ? '早上好' : h < 13 ? '中午好' : h < 18 ? '下午好' : '晚上好') + '，铲屎官'
+  $('#today-line').textContent = `${fmtMD(today)} ${WEEK[today.getDay()]} · 18°C 晴，空气偏干（示例天气）`
+  $('#cat-cards').innerHTML = Object.entries(CATS).map(([id, c]) => {
+    const a = ageOf(c.birthday), L = S.litter[id]
+    return `<article class="cat-card" style="${catVars(id)}">
+      <div class="avatar">${catFace(id)}</div>
+      <p class="name">${c.name}</p>
+      <p class="age num">${ageText(a)}</p>
+      <p class="stage num">≈ 人类 ${humanAge(a.total)} 岁 · ${stageOf(a.total)}</p>
+      <p class="today-row num"><span>小便 ${L.pee}</span><span>大便 ${L.poop}</span></p>
+    </article>`
+  }).join('')
+  renderReminders()
+  renderFeed()
+}
+
+function dueInfo(item) {
+  if (!item.every) return { left: Infinity, lv: 'ok', label: '已完成' }
+  const left = item.last + item.every
+  if (left < 0) return { left, lv: 'bad', label: `逾期 ${-left} 天` }
+  if (left <= 30) return { left, lv: 'warn', label: `${left} 天后` }
+  return { left, lv: 'ok', label: fmtDate(day(left)).replace(/^\d+年/, m => m === `${today.getFullYear()}年` ? '' : m) }
+}
+
+function renderReminders() {
+  const items = S.alerts.map(a => ({ ...a, rank: -1 }))
+  for (const [id, hh] of Object.entries(HEALTH)) {
+    for (const v of [...hh.vacc, ...hh.worm]) {
+      const d = dueInfo(v)
+      if (d.lv === 'ok') continue
+      items.push({ lv: d.lv, rank: d.left, t: `${CATS[id].name} · ${v.name}${d.left < 0 ? '已经逾期' : '快到期'}`,
+        s: d.left < 0 ? `应在 ${fmtMD(day(d.left))} 前完成，记得补上` : `${fmtMD(day(d.left))} 到期，可以先约医院`, pill: d.label })
+    }
+  }
+  const m = S.maint
+  for (const [k, name, unit] of [['litter', '全换猫砂', '全换'], ['filter', '饮水机滤芯', '换'], ['clean', '清洗饮水机', '洗']]) {
+    const used = m[k + 'Days'], every = m[k + 'Every'], left = every - used
+    if (used / every < .75) continue
+    items.push({ lv: left <= 0 ? 'bad' : 'warn', rank: left, t: `${name} · 已用 ${used}/${every} 天`, s: left > 0 ? `${left} 天后该${unit}了` : '今天该换了', pill: left > 0 ? `${left} 天后` : '今天' })
+  }
+  items.sort((a, b) => a.rank - b.rank)
+  $('#rem-count').textContent = `${items.length} 件`
+  $('#reminders').innerHTML = items.map(i =>
+    `<li><span class="pill lv-${i.lv}">${i.pill}</span><span class="t">${i.t}</span><span class="s">${i.s}</span></li>`).join('')
+}
+
+const KIND = { litter: ['box', 'k-litter'], water: ['drop', 'k-water'], food: ['bowl', 'k-food'], clean: ['box', 'k-clean'] }
+function ago(t) {
+  const m = Math.round((Date.now() - t) / 6e4)
+  if (m < 1) return '刚刚'
+  if (m < 60) return `${m} 分钟前`
+  const d = new Date(t)
+  return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
+}
+function renderFeed() {
+  $('#feed').innerHTML = S.feed.slice(0, 8).map((f, i) => {
+    const [ic, cls] = KIND[f.kind]
+    return `<li class="${f.fresh ? 'new' : ''}"><span class="dot ${cls}">${icon(ic)}</span>
+      <span><span class="w num">${f.who} · ${ago(f.at)}</span><br><span class="x">${f.text}</span></span></li>`
+  }).join('')
+  S.feed.forEach(f => f.fresh = false)
+}
+
+// ---- 记录页 ----
+const litterCount = id => S.litter[id].pee + S.litter[id].poop
+function litterChart() {
+  const W = 320, H = 170, L = 24, R = 4, T = 14, B = 22
+  const data = { tz: [4, 5, 5, 4, 5, 4, litterCount('tz')], ng: [3, 4, 4, 3, 3, 4, litterCount('ng')] }
+  const yMax = Math.max(6, Math.ceil(Math.max(...data.tz, ...data.ng) / 2) * 2)
+  const ih = H - T - B, gw = (W - L - R) / 7, bw = 13
+  const y = v => T + ih - v / yMax * ih
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="最近 7 天两只猫每天的如厕次数">`
+  for (let t = 0; t <= yMax; t += 2) s += `<line class="gl" x1="${L}" x2="${W - R}" y1="${y(t)}" y2="${y(t)}"/><text class="ax num" x="${L - 6}" y="${y(t) + 3.5}" text-anchor="end">${t}</text>`
+  for (let i = 0; i < 7; i++) {
+    const cx = L + gw * i + gw / 2, lab = i === 6 ? '今天' : WEEK[day(i - 6).getDay()]
+    for (const [k, off] of [['tz', -bw - 1.5], ['ng', 1.5]]) {
+      const v = data[k][i], x = cx + off
+      s += `<rect class="b-${k}${i === 6 ? ' part' : ''}" x="${x}" y="${y(v)}" width="${bw}" height="${y(0) - y(v)}" rx="4"><title>${CATS[k].name} ${lab} ${v} 次</title></rect>`
+      s += `<text class="val num" x="${x + bw / 2}" y="${y(v) - 3}" text-anchor="middle">${v}</text>`
+    }
+    s += `<text class="ax${i === 6 ? ' now' : ''}" x="${cx}" y="${H - 6}" text-anchor="middle">${lab}</text>`
+  }
+  return s + '</svg>'
+}
+function waterChart() {
+  const W = 320, H = 170, L = 30, R = 4, T = 14, B = 22, yMax = 700
+  const vals = [470, 505, 455, 530, 490, 515, S.water]
+  const ih = H - T - B, gw = (W - L - R) / 7, bw = 20
+  const y = v => T + ih - Math.min(v, yMax) / yMax * ih
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="最近 7 天饮水机每天加水量">`
+  s += `<rect class="band" x="${L}" y="${y(560)}" width="${W - L - R}" height="${y(370) - y(560)}"/>`
+  s += `<text class="band-t" x="${W - R - 2}" y="${y(560) - 3}" text-anchor="end">参考 370–560</text>`
+  for (let t = 0; t <= 600; t += 200) s += `<line class="gl" x1="${L}" x2="${W - R}" y1="${y(t)}" y2="${y(t)}"/><text class="ax num" x="${L - 6}" y="${y(t) + 3.5}" text-anchor="end">${t}</text>`
+  vals.forEach((v, i) => {
+    const cx = L + gw * i + gw / 2, lab = i === 6 ? '今天' : WEEK[day(i - 6).getDay()]
+    s += `<rect class="b-water${i === 6 ? ' part' : ''}" x="${cx - bw / 2}" y="${y(v)}" width="${bw}" height="${y(0) - y(v)}" rx="5"><title>${lab} ${v} ml</title></rect>`
+    s += `<text class="val num" x="${cx}" y="${y(v) - 3}" text-anchor="middle">${v}</text>`
+    s += `<text class="ax${i === 6 ? ' now' : ''}" x="${cx}" y="${H - 6}" text-anchor="middle">${lab}</text>`
+  })
+  return s + '</svg>'
+}
+function renderRecords() {
+  $('#litter-chart').innerHTML = litterChart()
+  $('#water-chart').innerHTML = waterChart()
+  const checks = S.alerts.map(a => [a.lv, a.t]).concat([
+    ['ok', '团子 · 最近 6 天平均每天如厕 4.5 次，和前两周差不多'],
+    ['ok', '年糕 · 大便每天 1 次左右，状态正常'],
+    ['ok', '饮水 · 6 天平均 494 ml，在参考范围内'],
+    ['info', '年糕 · 最近半年体重 3.4 → 3.9 kg，还在长，继续每月称一次']
+  ])
+  const word = { ok: '正常', warn: '留意', bad: '就医', info: '提示' }
+  $('#checks').innerHTML = checks.map(([lv, t]) => `<li><span class="pill lv-${lv}">${word[lv]}</span><span>${t}</span></li>`).join('')
+  const m = S.maint, hrs = (Date.now() - m.scoopAt) / 36e5
+  const rows = [
+    ['上次铲屎', hrs < 1 ? '刚刚' : `${hrs.toFixed(1)} 小时前`, Math.min(hrs / 12, 1), '多猫家庭建议每天铲 2 次'],
+    ['全换猫砂', `${m.litterDays} / ${m.litterEvery} 天`, m.litterDays / m.litterEvery, '结团砂多猫 1–2 周全换'],
+    ['清洗饮水机', `${m.cleanDays} / ${m.cleanEvery} 天`, m.cleanDays / m.cleanEvery, '至少每周彻底清洗换水'],
+    ['饮水机滤芯', `${m.filterDays} / ${m.filterEvery} 天`, m.filterDays / m.filterEvery, '按说明书 1–3 个月']
+  ]
+  $('#maint').innerHTML = rows.map(([n, v, r, tip]) => `<div class="row">
+    <div><span>${n}</span><span class="num">${v}</span></div>
+    <div class="bar"><i class="${r >= 1 ? 'bad' : r >= .75 ? 'warn' : ''}" style="width:${Math.max(r * 100, 3)}%"></i></div>
+    <span class="soft">${tip}</span></div>`).join('')
+}
+
+// ---- 健康页 ----
+function renderHealth() {
+  const id = S.healthCat, hh = HEALTH[id]
+  const row = v => {
+    const d = dueInfo(v)
+    const next = v.every ? (d.left < 0 ? `应在 ${fmtDate(day(d.left))} 前` : `下次 ${fmtDate(day(d.left))}`) : v.where
+    return `<li><span class="t">${v.name}</span><span class="pill lv-${d.lv}">${d.label}</span>
+      <span class="s">${v.dose} · 上次 ${fmtDate(day(v.last))}<br>${next}</span></li>`
+  }
+  $('#h-vacc').innerHTML = hh.vacc.map(row).join('')
+  $('#h-worm').innerHTML = hh.worm.map(row).join('')
+  const a = ageOf(CATS[id].birthday)
+  const every = a.total / 12 > 10 ? 6 : 12
+  $('#h-visit').innerHTML = `<li><span class="t">下次体检</span><span class="pill lv-info">每 ${every} 个月</span><span class="s">${stageOf(a.total)}建议每 ${every === 6 ? '半年' : '年'}体检一次</span></li>` +
+    hh.visit.map(v => `<li><span class="t">${v.name}</span><span class="pill lv-ok">${fmtMD(day(v.at))}</span><span class="s">${fmtDate(day(v.at))} · ${v.note}</span></li>`).join('')
+}
+
+// ---- 猫咪页 ----
+function weightChart(id) {
+  const vals = CATS[id].weight, W = 300, H = 96, L = 8, R = 46, T = 14, B = 20
+  const lo = Math.min(...vals) - .3, hi = Math.max(...vals) + .3
+  const x = i => L + i * (W - L - R) / (vals.length - 1), y = v => T + (H - T - B) * (1 - (v - lo) / (hi - lo))
+  const pts = vals.map((v, i) => `${x(i)},${y(v)}`).join(' ')
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${CATS[id].name}最近 6 个月体重">`
+  s += `<polyline points="${pts}" class="ln-${id}"/>`
+  vals.forEach((v, i) => {
+    const mo = new Date(today.getFullYear(), today.getMonth() - 5 + i, 1).getMonth() + 1
+    s += `<circle cx="${x(i)}" cy="${y(v)}" r="${i === vals.length - 1 ? 4.5 : 3}" class="dt-${id}"><title>${mo}月 ${v} kg</title></circle>`
+    s += `<text class="ax" x="${x(i)}" y="${H - 4}" text-anchor="middle">${mo}月</text>`
+  })
+  s += `<text class="end num" x="${x(vals.length - 1) + 9}" y="${y(vals.at(-1)) + 4}">${vals.at(-1)} kg</text>`
+  return s + '</svg>'
+}
+function renderProfile() {
+  const id = S.profileCat, c = CATS[id], a = ageOf(c.birthday)
+  const homeYears = ((today - c.home) / DAY / 365.25).toFixed(1)
+  $('#profile').innerHTML = `
+    <div class="card" style="${catVars(id)}">
+      <div class="prof"><div class="avatar">${catFace(id)}</div>
+        <div><p class="name">${c.name}</p><p class="soft">${c.motto}</p>
+        <p class="num" style="font-weight:800">${ageText(a)} · ≈ 人类 ${humanAge(a.total)} 岁 · ${stageOf(a.total)}</p></div></div>
+      <dl class="facts num">
+        <div><dt>生日</dt><dd>${fmtDate(c.birthday)}</dd></div>
+        <div><dt>到家纪念日</dt><dd>${fmtMD(c.home)} · 来家 ${homeYears} 年</dd></div>
+        <div><dt>品种</dt><dd>${c.breed}</dd></div>
+        <div><dt>性别</dt><dd>${c.sex} · 已绝育</dd></div>
+        <div><dt>芯片号</dt><dd>${c.chip}</dd></div>
+        <div><dt>吃什么</dt><dd>${c.food}</dd></div>
+      </dl>
+    </div>
+    <div class="card chart"><h3>体重 <span class="right">每月称一次</span></h3>${weightChart(id)}</div>
+    <div class="card" style="${catVars(id)}">
+      <h3>兴趣爱好</h3>
+      <div class="grp"><h4>最喜欢</h4><div class="tags">${c.likes.map(t => `<span class="tag">${t}</span>`).join('')}</div></div>
+      <div class="grp"><h4>不喜欢</h4><div class="tags">${c.dislikes.map(t => `<span class="tag no">${t}</span>`).join('')}</div></div>
+      <div class="grp"><h4>性格</h4><div class="tags">${c.traits.map(t => `<span class="tag">${t}</span>`).join('')}</div></div>
+      <div class="grp"><h4>玩耍风格</h4><p>${c.play}</p></div>
+    </div>
+    <div class="card tip"><h3><svg class="ico" style="color:var(--warn)"><use href="#i-spark"/></svg>按${c.name}的爱好推荐</h3><p>${c.ai}</p><p class="meta">AI 生成 · 示例</p></div>`
+}
+
+// ---- 贴士页 ----
+const TIPS = [
+  ['猫砂', '两只猫建议准备 3 个猫砂盆（猫的数量 + 1），分开放在安静、好走到的地方。', '常见兽医行为学建议'],
+  ['猫砂', '公猫频繁进猫砂盆、使劲却尿不出或只有一点点，可能是尿道堵塞。这是急症，别等到第二天。', '康奈尔大学猫健康中心等'],
+  ['猫砂', '多猫家庭每天最好铲 2 次；结团砂 1–2 周全部换新一次。', '猫砂维护指南'],
+  ['喝水', '健康猫每天每公斤体重大约需要 40–60 ml 水，湿粮里的水也算在内。', 'IVIS 猫临床营养百科'],
+  ['喝水', '饮水机至少每周彻底清洗换水一次，滤芯一般 1–3 个月换，水流变小或有异味就提前换。', '饮水机维护建议'],
+  ['疫苗', '低风险的室内成年猫，猫三联可以每 3 年加强一次；狂犬疫苗看产品说明和当地规定。具体听兽医的。', 'AAHA/AAFP 2020 猫疫苗指南'],
+  ['疫苗', '两次疫苗之间至少隔 2 周；猫不舒服的时候先别打。', 'AAHA/AAFP 2020 猫疫苗指南'],
+  ['玩耍', '玩到最后让猫「抓到」猎物，再给一点吃的，模拟「捕猎 → 进食」，猫会更满足。', '猫行为学常见建议'],
+  ['年龄', '猫 1–6 岁是青年期，7–10 岁成熟期，10 岁以上是老年期。老年猫建议每半年体检一次。', 'AAHA/AAFP 2021 猫生命阶段指南'],
+  ['季节', '开暖气后别让猫贴着电暖器睡太久，小心低温烫伤；用洗衣机、烘干机前先看一眼里面有没有猫。', '冬季安全提醒']
+]
+function renderTips() {
+  const mine = [
+    ['k-water', 'drop', '天冷开了暖气，屋里会变干。卧室再放一个水碗，或往湿粮里加一勺温水。'],
+    ['k-litter', 'cat', CATS.tz.ai],
+    ['k-food', 'heart', '年糕的狂犬疫苗 12 天后到期，体外驱虫已经逾期 3 天。约医院时问一下两件事要不要分开做。']
+  ]
+  $('#mine').innerHTML = mine.map(([cls, ic, t]) => `<li><span class="dot ${cls}">${icon(ic)}</span><span>${t}</span></li>`).join('')
+  const topics = ['全部', ...new Set(TIPS.map(t => t[0]))]
+  $('#filters').innerHTML = topics.map(t => `<button class="chip" aria-pressed="${t === S.tipTopic}" data-topic="${t}">${t}</button>`).join('')
+  $('#lib').innerHTML = TIPS.filter(t => S.tipTopic === '全部' || t[0] === S.tipTopic)
+    .map(([k, t, src]) => `<li><span><span class="pill lv-info">${k}</span></span><span>${t}</span><span class="src">参考：${src}</span></li>`).join('')
+}
+function renderTokens() {
+  const daily = [1850, 2100, 1640, 1920, 5260, 1710, 1880, 2310, 1600, 6150, 1760, 1930, 2050, 1236]
+  const feat = [['每日小贴士', 21400], ['每周小结', 12800], ['疫苗本识别', 11200], ['问问猫博士', 3220]]
+  const month = feat.reduce((a, f) => a + f[1], 0)
+  $('#tok-month').textContent = nf(month)
+  $('#tok-bar').style.width = `${month / 2000}%`
+  $('#tok-avg').textContent = nf(Math.round(month / today.getDate()))
+  const W = 320, H = 96, L = 4, R = 4, T = 8, B = 18, yMax = 7000, gw = (W - L - R) / daily.length, bw = 14
+  const y = v => T + (H - T - B) * (1 - v / yMax)
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="最近 14 天每天用的 token">`
+  daily.forEach((v, i) => {
+    const cx = L + gw * i + gw / 2
+    s += `<rect class="b-tok${i === daily.length - 1 ? ' part' : ''}" x="${cx - bw / 2}" y="${y(v)}" width="${bw}" height="${y(0) - y(v)}" rx="4"><title>${fmtMD(day(i - 13))} ${nf(v)} tokens</title></rect>`
+    if (i % 3 === 1 || i === daily.length - 1) s += `<text class="ax${i === daily.length - 1 ? ' now' : ''}" x="${cx}" y="${H - 4}" text-anchor="middle">${i === daily.length - 1 ? '今天' : fmtMD(day(i - 13))}</text>`
+  })
+  $('#tok-chart').innerHTML = s + '</svg>'
+  $('#tok-feat').innerHTML = feat.map(([n, v]) => `<li><span>${n}</span><span class="bar"><i style="width:${v / feat[0][1] * 100}%"></i></span><span class="num">${nf(v)}</span></li>`).join('')
+  const calls = [[0, '07:00', '每日小贴士', 1012, 224], [-1, '07:00', '每日小贴士', 998, 231], [-4, '21:14', '疫苗本识别', 2860, 410], [-5, '20:00', '每周小结', 3940, 620], [-6, '07:00', '每日小贴士', 1030, 218]]
+  $('#tok-calls').innerHTML = '<tr><th>时间</th><th>功能</th><th>输入</th><th>输出</th></tr>' +
+    calls.map(([d, t, f, i, o]) => `<tr><td>${d ? fmtMD(day(d)) : '今天'} ${t}</td><td>${f}</td><td>${nf(i)}</td><td>${nf(o)}</td></tr>`).join('')
+}
+
+// ---- 导航 ----
+const TABS = ['home', 'records', 'health', 'cats', 'tips', 'settings']
+function go(tab) {
+  if (!TABS.includes(tab)) tab = 'home'
+  TABS.forEach(t => $('#s-' + t).hidden = t !== tab)
+  $$('.tab').forEach(b => b.dataset.tab === tab ? b.setAttribute('aria-current', 'page') : b.removeAttribute('aria-current'))
+  $('#screens').scrollTop = 0
+  const top = $('#phone').getBoundingClientRect().top
+  if (top < 0) $('#phone').scrollIntoView({ block: 'start' })
+}
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-tab],[data-go]')
+  if (t) return go(t.dataset.tab || t.dataset.go)
+  const sw = e.target.closest('[data-switch] button')
+  if (sw) {
+    $$('button', sw.parentNode).forEach(b => b.setAttribute('aria-pressed', b === sw))
+    if (sw.parentNode.dataset.switch === 'health') { S.healthCat = sw.dataset.cat; renderHealth() }
+    else { S.profileCat = sw.dataset.cat; renderProfile() }
+    return
+  }
+  const tp = e.target.closest('[data-topic]')
+  if (tp) { S.tipTopic = tp.dataset.topic; return renderTips() }
+  const tg = e.target.closest('.sw-t')
+  if (tg) return tg.setAttribute('aria-checked', tg.getAttribute('aria-checked') !== 'true')
+  const ts = e.target.closest('[data-toast]')
+  if (ts) return toast(ts.dataset.toast)
+  const sh = e.target.closest('[data-sheet]')
+  if (sh) return openSheet(sh.dataset.sheet)
+})
+
+// ---- 记录表单 ----
+let sheetKind = null, lastFocus = null
+const TITLES = { litter: '猫砂盆', water: '饮水机', food: '喂饭' }
+function openSheet(kind) {
+  sheetKind = kind; lastFocus = document.activeElement
+  $('#sheet-title').textContent = TITLES[kind]
+  $$('[data-form]').forEach(f => f.hidden = f.dataset.form !== kind)
+  $('#overlay').hidden = false
+  syncSheet()
+  $('#sheet-save').focus()
+}
+function closeSheet() { $('#overlay').hidden = true; lastFocus?.focus() }
+const pick = name => $(`[data-single="${name}"] [aria-pressed="true"]`)?.dataset.v
+const picks = name => $$(`[data-multi="${name}"] [aria-pressed="true"]`).map(b => b.dataset.v)
+function syncSheet() {
+  const use = pick('lt-mode') === 'use', type = pick('lt-type')
+  $('#lt-use').hidden = !use
+  $('#lt-size-f').hidden = type === 'poop'
+  $('#lt-stool-f').hidden = type === 'pee'
+  $('#wt-ml-f').hidden = !['add', 'change'].includes(pick('wt-mode'))
+}
+$('#overlay').addEventListener('click', e => {
+  if (e.target.id === 'overlay') return closeSheet()
+  const b = e.target.closest('[data-single] button, [data-multi] button')
+  if (b) {
+    if (b.parentNode.dataset.single) $$('button', b.parentNode).forEach(x => x.setAttribute('aria-pressed', x === b))
+    else b.setAttribute('aria-pressed', b.getAttribute('aria-pressed') !== 'true')
+    return syncSheet()
+  }
+  const st = e.target.closest('[data-step]')
+  if (st) { const inp = $('#' + st.dataset.step); inp.value = Math.max(0, (+inp.value || 0) + +st.dataset.d) }
+})
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#overlay').hidden) closeSheet() })
+
+function addFeed(kind, text, who = '我') {
+  S.feed.unshift({ kind, text, who, at: Date.now(), fresh: true })
+}
+$('#sheet-save').addEventListener('click', () => {
+  let msg = '记好啦', bad = false
+  if (sheetKind === 'litter') {
+    const mode = pick('lt-mode'), box = pick('lt-box')
+    if (mode === 'use') {
+      const who = pick('lt-who'), type = pick('lt-type'), flags = picks('lt-flags')
+      const name = who === 'unknown' ? '不确定是谁' : CATS[who].name
+      const parts = [{ pee: '小便', poop: '大便', both: '小便 + 大便' }[type]]
+      if (type !== 'poop') parts.push(pick('lt-size'))
+      if (type !== 'pee') parts.push(pick('lt-stool'))
+      if (type !== 'poop') S.litter[who].pee++
+      if (type !== 'pee') S.litter[who].poop++
+      const fl = { strain: '使劲很久', block: '尿不出', blood: '有血', outside: '在盆外' }
+      addFeed('litter', `${name} · ${parts.join(' · ')}${flags.length ? ' · ' + flags.map(f => fl[f]).join('、') : ''}`)
+      if (flags.includes('block')) {
+        const male = who !== 'unknown' && CATS[who].sex === '公'
+        S.alerts.unshift({ lv: 'bad', pill: '马上就医', t: `${name} 使劲却尿不出：可能是尿道堵塞`, s: `${male ? '公猫尤其危险，' : ''}这是急症，请现在就联系医院，别等到明天` })
+        msg = `${name}可能尿道堵塞，请马上联系医院`; bad = true
+      } else if (flags.includes('blood')) {
+        S.alerts.unshift({ lv: 'bad', pill: '尽快就医', t: `${name} 的排泄物里有血`, s: '拍张照片，尽快联系医院' })
+        msg = '记下了，有血要尽快就医'; bad = true
+      }
+    } else if (mode === 'scoop') {
+      S.maint.scoopAt = Date.now(); addFeed('clean', `铲屎 · ${box}`)
+    } else {
+      S.maint.litterDays = 0; addFeed('clean', `全换猫砂 · ${box}`); msg = '全换好了，14 天后提醒你'
+    }
+  } else if (sheetKind === 'water') {
+    const mode = pick('wt-mode'), ml = Math.max(0, +$('#water-ml').value || 0)
+    if (mode === 'add' || mode === 'change') { S.water += ml; addFeed('water', `饮水机${mode === 'add' ? '加水' : '换水'} ${ml} ml`) }
+    if (mode === 'clean') { S.maint.cleanDays = 0; addFeed('water', '清洗饮水机'); msg = '洗干净啦，7 天后提醒你' }
+    if (mode === 'filter') { S.maint.filterDays = 0; addFeed('water', '饮水机换了新滤芯'); msg = '新滤芯，30 天后提醒你' }
+  } else {
+    const who = pick('fd-who'), g = Math.max(0, +$('#food-g').value || 0)
+    addFeed('food', `${who === 'both' ? '两只' : CATS[who].name} · ${pick('fd-type')} ${g} g`)
+  }
+  closeSheet()
+  renderAll()
+  toast(msg, bad)
+})
+
+let toastTimer
+function toast(text, bad = false) {
+  const t = $('#toast')
+  t.textContent = text; t.className = 'toast' + (bad ? ' bad' : ''); t.hidden = false
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.hidden = true, bad ? 4200 : 2200)
+}
+
+function renderAll() { renderHome(); renderRecords() }
+renderAll(); renderHealth(); renderProfile(); renderTips(); renderTokens()
+go(location.hash.slice(1))
+
+// 模拟家人在另一台手机上记了一笔
+setTimeout(() => { S.litter.ng.poop++; addFeed('litter', '年糕 · 大便 · 正常', '爸爸'); renderAll() }, 9000)
+setInterval(() => !$('#s-home').hidden && renderFeed(), 60000)
+</script>
