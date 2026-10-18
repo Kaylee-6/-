@@ -2,9 +2,10 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Noto+Sans+SC:wght@400;500;700&family=ZCOOL+KuaiLe&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap&text=AIeknot%E4%B8%8A%E4%B8%8B%E4%B8%AD%E4%BA%86%E4%BA%8B%E4%BB%8A%E4%BB%AC%E4%BD%93%E4%BD%A0%E5%81%A5%E5%85%B4%E5%88%B0%E5%8A%A0%E5%8A%A8%E5%8D%88%E5%8E%95%E5%8E%9F%E5%8F%91%E5%91%98%E5%92%8C%E5%92%AA%E5%93%AA%E5%96%82%E5%9B%A2%E5%9E%8B%E5%A3%AB%E5%A4%9A%E5%A4%9C%E5%A4%A9%E5%A5%BD%E5%A6%82%E5%AD%90%E5%AE%98%E5%AE%B6%E5%B0%8F%E5%B0%91%E5%B0%B1%E5%B1%8E%E5%B9%B4%E5%BA%A6%E5%BA%AD%E5%BA%B7%E5%BD%95%E6%80%81%E6%84%8F%E6%88%90%E6%8A%A4%E6%8C%89%E6%8D%AE%E6%8E%A8%E6%8F%90%E6%95%B0%E6%97%A5%E6%97%A9%E6%99%9A%E6%9C%AC%E6%9C%BA%E6%9F%A5%E6%A1%88%E6%A1%A3%E6%A3%80%E6%AC%A1%E6%B0%B4%E6%B7%B1%E7%88%B1%E7%8C%AB%E7%94%A8%E7%95%99%E7%96%AB%E7%9A%84%E7%9B%86%E7%A0%82%E7%B3%95%E7%BB%99%E7%BB%B4%E7%BD%AE%E8%8B%97%E8%8D%90%E8%99%AB%E8%A6%81%E8%AE%B0%E8%AE%BE%E8%AF%8A%E8%B4%B4%E8%B6%A3%E8%BF%9B%E9%86%92%E9%87%8D%E9%87%8F%E9%93%B2%E9%A5%AD%E9%A5%AE%E9%A9%B1%EF%BC%8C">
 <style>
-/* Layout: desktop = notes column + framed phone; phone width = notes banner + full-width app with a sticky tab bar */
+/* Layout: desktop = notes column + framed phone; phone width = full-bleed app first (sticky tab bar), notes below */
 :root{
   --bg:#FFF3F6; --app-bg:#FFF9FB; --surface:#FFFFFF; --surface-2:#FFE9EF; --line:#F3D3DE;
   --ink:#3A2838; --ink-soft:#7D6479; --bezel:#3A2838; --scrim:rgba(40,20,35,.38);
@@ -15,8 +16,8 @@
   --fur-tz:#F7A35C; --fur-tz-dark:#D9732A; --fur-white:#FFFDFB; --fur-black:#2E2430; --fur-outline:rgba(58,40,56,.22);
   --ear-pink:#FFB6C6; --nose:#FF8FA8; --blush:#FF8FA8; --eye:#2E2430; --whisker:#8A7386;
   --shadow:0 6px 20px rgba(192,45,87,.09);
-  --font-display:'ZCOOL KuaiLe','Nunito','Noto Sans SC','PingFang SC','Microsoft YaHei',system-ui,sans-serif;
-  --font-body:'Nunito','Noto Sans SC','PingFang SC','Microsoft YaHei',system-ui,sans-serif;
+  --font-display:'ZCOOL KuaiLe','Nunito','PingFang SC','Hiragino Sans GB','Microsoft YaHei','Noto Sans CJK SC',system-ui,sans-serif;
+  --font-body:'Nunito','PingFang SC','Hiragino Sans GB','Microsoft YaHei','Noto Sans CJK SC',system-ui,sans-serif;
   --r-lg:22px; --r-md:16px;
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
@@ -83,6 +84,13 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
   .tabbar{position:static;border-radius:0;padding-bottom:10px}
   .overlay,.toast{position:absolute!important}
 }
+@media (max-width:899px){
+  .page{padding-left:0;padding-right:0;padding-block:0 28px}
+  .intro{order:2;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  .phone{border:0;border-radius:0;max-width:560px}
+  .screens{padding-left:max(14px,env(safe-area-inset-left,0px));padding-right:max(14px,env(safe-area-inset-right,0px))}
+  .tabbar{border-radius:0;padding-left:max(6px,env(safe-area-inset-left,0px));padding-right:max(6px,env(safe-area-inset-right,0px))}
+}
 
 /* shared bits */
 .head{display:flex;align-items:center;justify-content:space-between;gap:10px}
@@ -129,8 +137,12 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
 .cat-card .name{font-family:var(--font-display);font-size:22px;line-height:1.2;color:var(--c)}
 .cat-card .age{font-weight:800;font-size:15px}
 .cat-card .stage{font-size:12px;color:var(--ink-soft)}
-.today-row{display:flex;gap:6px;margin-top:4px;flex-wrap:wrap;justify-content:center}
-.today-row span{font-size:12px;font-weight:700;background:var(--cs);border-radius:99px;padding:1px 8px}
+.last{font-size:12px;color:var(--ink-soft)}
+.one-tap{display:grid;grid-template-columns:1fr 1fr;gap:6px;width:100%;margin-top:4px}
+.one-tap button{border:0;background:var(--cs);border-radius:12px;padding:7px 2px;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;gap:4px;transition:transform .12s}
+.one-tap button:active{transform:scale(.94)}
+.one-tap b{font-size:15px}
+.one-tap i{font-style:normal;width:18px;height:18px;border-radius:50%;background:var(--c);color:var(--surface);display:grid;place-items:center;font-size:14px;line-height:1}
 .quick{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .qbtn{border:0;background:var(--surface);box-shadow:var(--shadow);border-radius:var(--r-lg);padding:12px 4px 10px;display:grid;justify-items:center;gap:4px;transition:transform .12s}
 .qbtn:active{transform:scale(.95)}
@@ -250,7 +262,11 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
 .stepper input{width:90px;height:38px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);text-align:center;font:inherit;font-weight:800}
 .primary{border:0;background:var(--accent);color:var(--surface);font-weight:800;font-size:16px;border-radius:16px;padding:12px}
 .toast{position:fixed;left:50%;bottom:calc(88px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:60;background:var(--ink);color:var(--bg);
-  border-radius:99px;padding:9px 18px;font-weight:700;font-size:14px;max-width:calc(100% - 32px);text-align:center;box-shadow:var(--shadow)}
+  border-radius:99px;padding:9px 18px;font-weight:700;font-size:14px;width:max-content;max-width:calc(100% - 32px);box-shadow:var(--shadow);
+  display:flex;align-items:center;gap:8px;animation:pop .22s ease-out}
+.toast .ico{font-size:16px;color:var(--accent)}
+.toast button{border:0;background:none;color:inherit;font-weight:800;text-decoration:underline;text-underline-offset:3px;padding:0 0 0 6px;white-space:nowrap}
+@keyframes pop{from{opacity:0;transform:translateX(-50%) scale(.9)}}
 .toast.bad{background:var(--bad);color:var(--surface)}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -280,7 +296,7 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
     <ul class="try">
       <li>底部 5 个标签切换页面，首页右上角的齿轮是设置。</li>
       <li>首页点「猫砂盆」，异常里选「尿不出 / 很少」，看看急症提醒长什么样。</li>
-      <li>随便记几笔，猫咪卡片、图表和家庭动态都会跟着变。记录只存在这个页面里，刷新就没了。</li>
+      <li>点猫咪卡片上的「＋」，一下就记一次；记错了点提示条里的「撤销」。记录存在这台设备的浏览器里，第二天自动清空。</li>
       <li>「贴士」页最下面是 AI 用了多少 token。</li>
     </ul>
     <div class="legend"><span><i class="sw" style="background:var(--cat-a)"></i>团子</span><span><i class="sw" style="background:var(--cat-b)"></i>年糕</span></div>
@@ -298,7 +314,7 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
           </div>
           <button class="icon-btn" data-go="settings" aria-label="设置"><svg class="ico"><use href="#i-gear"/></svg></button>
         </div>
-        <p class="live">妈妈 · 爸爸 在线，记录实时同步</p>
+        <div class="head"><p class="live">妈妈 · 爸爸 在线，实时同步</p><span class="pill lv-info">示例数据</span></div>
         <div class="cats" id="cat-cards"></div>
         <div class="quick">
           <button class="qbtn" data-sheet="litter"><span class="bub k-litter"><svg class="ico"><use href="#i-box"/></svg></span><b>猫砂盆</b><small>如厕 · 铲屎</small></button>
@@ -422,6 +438,10 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
             <li>每月 token 预算<span class="num">200,000</span></li>
           </ul>
         </div>
+        <div class="card"><h3>原型数据</h3>
+          <p class="fineprint">你在原型里记的内容存在这台设备的浏览器里，第二天自动清空。</p>
+          <div><button class="ghost" id="reset-demo">恢复示例数据</button></div>
+        </div>
       </section>
     </div>
 
@@ -466,10 +486,11 @@ button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:tra
           </div>
         </div>
 
+        <div class="field"><span>什么时候</span><div class="chips" data-single="when"><button class="chip" aria-pressed="true" data-v="0">刚刚</button><button class="chip" aria-pressed="false" data-v="15">15 分钟前</button><button class="chip" aria-pressed="false" data-v="30">半小时前</button><button class="chip" aria-pressed="false" data-v="60">1 小时前</button></div></div>
         <button class="primary" id="sheet-save">记好了</button>
       </div>
     </div>
-    <div class="toast" id="toast" role="status" hidden></div>
+    <div class="toast" id="toast" role="status" hidden><svg class="ico"><use href="#i-paw"/></svg><span id="toast-msg"></span><button id="toast-undo" hidden>撤销</button></div>
   </div>
 </div>
 
@@ -537,17 +558,31 @@ const S = {
   maint: { scoopAt: Date.now() - 210 * 6e4, litterDays: 11, litterEvery: 14, cleanDays: 4, cleanEvery: 7, filterDays: 26, filterEvery: 30 },
   alerts: [],
   feed: [
-    { ago: 28, who: '妈妈', kind: 'litter', text: '团子 · 小便 · 中团' },
+    { ago: 28, who: '妈妈', kind: 'litter', cat: 'tz', pee: 1, text: '团子 · 小便 · 中团' },
     { ago: 95, who: '爸爸', kind: 'food', text: '两只 · 湿粮 85 g' },
-    { ago: 160, who: '妈妈', kind: 'litter', text: '年糕 · 小便 · 小团' },
+    { ago: 160, who: '妈妈', kind: 'litter', cat: 'ng', pee: 1, text: '年糕 · 小便 · 小团' },
     { ago: 210, who: '爸爸', kind: 'clean', text: '铲屎 · 3 个猫砂盆' },
     { ago: 250, who: '爸爸', kind: 'water', text: '饮水机加水 260 ml' },
-    { ago: 300, who: '妈妈', kind: 'litter', text: '团子 · 大便 · 正常' },
-    { ago: 330, who: '妈妈', kind: 'litter', text: '年糕 · 小便 · 中团' },
-    { ago: 420, who: '妈妈', kind: 'litter', text: '团子 · 小便 · 大团' }
+    { ago: 300, who: '妈妈', kind: 'litter', cat: 'tz', poop: 1, text: '团子 · 大便 · 正常' },
+    { ago: 330, who: '妈妈', kind: 'litter', cat: 'ng', pee: 1, text: '年糕 · 小便 · 中团' },
+    { ago: 420, who: '妈妈', kind: 'litter', cat: 'tz', pee: 1, text: '团子 · 小便 · 大团' }
   ].map(f => ({ ...f, at: Date.now() - f.ago * 6e4 })),
-  healthCat: 'tz', profileCat: 'tz', tipTopic: '全部'
+  simDone: false, healthCat: 'tz', profileCat: 'tz', tipTopic: '全部'
 }
+
+// ---- 保存 / 撤销（原型只存在本机浏览器，第二天清空）----
+const STORE = 'cat-proto-v2'
+const pickState = () => ({ litter: S.litter, water: S.water, maint: S.maint, alerts: S.alerts, feed: S.feed, simDone: S.simDone })
+const INITIAL = JSON.stringify(pickState())
+let undoSnap = null
+function save() { try { localStorage.setItem(STORE, JSON.stringify({ day: today.toDateString(), s: pickState() })) } catch (e) {} }
+function load() {
+  try { const d = JSON.parse(localStorage.getItem(STORE)); if (d && d.day === today.toDateString()) Object.assign(S, d.s) } catch (e) {}
+  S.feed.forEach(f => f.fresh = false)
+}
+function snap() { undoSnap = JSON.stringify(pickState()) }
+function undo() { if (!undoSnap) return; Object.assign(S, JSON.parse(undoSnap)); undoSnap = null; save(); renderAll(); toast('已撤销') }
+function resetDemo() { Object.assign(S, JSON.parse(INITIAL), { simDone: true }); undoSnap = null; save(); renderAll(); toast('已恢复示例数据') }
 
 // ---- 年龄 ----
 function ageOf(b) {
@@ -592,7 +627,7 @@ const catVars = id => id === 'tz' ? '--c:var(--cat-a);--cs:var(--cat-a-soft)' : 
 function renderHome() {
   const h = now.getHours()
   $('#hello').textContent = (h < 5 ? '夜深了' : h < 11 ? '早上好' : h < 13 ? '中午好' : h < 18 ? '下午好' : '晚上好') + '，铲屎官'
-  $('#today-line').textContent = `${fmtMD(today)} ${WEEK[today.getDay()]} · 18°C 晴，空气偏干（示例天气）`
+  $('#today-line').textContent = `${fmtMD(today)} ${WEEK[today.getDay()]} · 18°C 晴 · 空气偏干`
   $('#cat-cards').innerHTML = Object.entries(CATS).map(([id, c]) => {
     const a = ageOf(c.birthday), L = S.litter[id]
     return `<article class="cat-card" style="${catVars(id)}">
@@ -600,7 +635,8 @@ function renderHome() {
       <p class="name">${c.name}</p>
       <p class="age num">${ageText(a)}</p>
       <p class="stage num">≈ 人类 ${humanAge(a.total)} 岁 · ${stageOf(a.total)}</p>
-      <p class="today-row num"><span>小便 ${L.pee}</span><span>大便 ${L.poop}</span></p>
+      <p class="last num">${lastPee(id)}</p>
+      <div class="one-tap num"><button data-quick="${id}:pee" aria-label="给${c.name}记一次小便">小便 <b>${L.pee}</b><i>+</i></button><button data-quick="${id}:poop" aria-label="给${c.name}记一次大便">大便 <b>${L.poop}</b><i>+</i></button></div>
     </article>`
   }).join('')
   renderReminders()
@@ -644,6 +680,12 @@ function ago(t) {
   if (m < 60) return `${m} 分钟前`
   const d = new Date(t)
   return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
+}
+function lastPee(id) {
+  const f = S.feed.find(f => f.kind === 'litter' && f.cat === id && f.pee)
+  if (!f) return '还没有小便记录'
+  const m = Math.round((Date.now() - f.at) / 6e4)
+  return '上次小便 ' + (m < 1 ? '刚刚' : m < 60 ? `${m} 分钟前` : `约 ${Math.round(m / 60)} 小时前`)
 }
 function renderFeed() {
   $('#feed').innerHTML = S.feed.slice(0, 8).map((f, i) => {
@@ -850,6 +892,10 @@ document.addEventListener('click', e => {
   if (tg) return tg.setAttribute('aria-checked', tg.getAttribute('aria-checked') !== 'true')
   const ts = e.target.closest('[data-toast]')
   if (ts) return toast(ts.dataset.toast)
+  const q = e.target.closest('[data-quick]')
+  if (q) return quickLog(...q.dataset.quick.split(':'))
+  if (e.target.closest('#toast-undo')) return undo()
+  if (e.target.closest('#reset-demo')) return resetDemo()
   const sh = e.target.closest('[data-sheet]')
   if (sh) return openSheet(sh.dataset.sheet)
 })
@@ -888,23 +934,35 @@ $('#overlay').addEventListener('click', e => {
 })
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#overlay').hidden) closeSheet() })
 
-function addFeed(kind, text, who = '我') {
-  S.feed.unshift({ kind, text, who, at: Date.now(), fresh: true })
+function addFeed(kind, text, who = '我', extra = {}, at = Date.now()) {
+  S.feed.push({ kind, text, who, at, fresh: true, ...extra })
+  S.feed.sort((a, b) => b.at - a.at)
+}
+function quickLog(id, key) {
+  const label = key === 'pee' ? '小便' : '大便'
+  snap()
+  S.litter[id][key]++
+  addFeed('litter', `${CATS[id].name} · ${label}`, '我', { cat: id, [key]: 1 })
+  save(); renderAll()
+  toast(`${CATS[id].name} ${label} +1`, false, true)
 }
 $('#sheet-save').addEventListener('click', () => {
   let msg = '记好啦', bad = false
+  const at = Date.now() - (+pick('when') || 0) * 6e4
+  snap()
   if (sheetKind === 'litter') {
     const mode = pick('lt-mode'), box = pick('lt-box')
     if (mode === 'use') {
       const who = pick('lt-who'), type = pick('lt-type'), flags = picks('lt-flags')
       const name = who === 'unknown' ? '不确定是谁' : CATS[who].name
+      const pee = type !== 'poop', poop = type !== 'pee'
       const parts = [{ pee: '小便', poop: '大便', both: '小便 + 大便' }[type]]
-      if (type !== 'poop') parts.push(pick('lt-size'))
-      if (type !== 'pee') parts.push(pick('lt-stool'))
-      if (type !== 'poop') S.litter[who].pee++
-      if (type !== 'pee') S.litter[who].poop++
+      if (pee) { parts.push(pick('lt-size')); S.litter[who].pee++ }
+      if (poop) { parts.push(pick('lt-stool')); S.litter[who].poop++ }
       const fl = { strain: '使劲很久', block: '尿不出', blood: '有血', outside: '在盆外' }
-      addFeed('litter', `${name} · ${parts.join(' · ')}${flags.length ? ' · ' + flags.map(f => fl[f]).join('、') : ''}`)
+      // 尿不出的那次不算「上次小便」
+      addFeed('litter', `${name} · ${parts.join(' · ')}${flags.length ? ' · ' + flags.map(f => fl[f]).join('、') : ''}`, '我',
+        { cat: who, pee: pee && !flags.includes('block'), poop }, at)
       if (flags.includes('block')) {
         const male = who !== 'unknown' && CATS[who].sex === '公'
         S.alerts.unshift({ lv: 'bad', pill: '马上就医', t: `${name} 使劲却尿不出：可能是尿道堵塞`, s: `${male ? '公猫尤其危险，' : ''}这是急症，请现在就联系医院，别等到明天` })
@@ -914,36 +972,46 @@ $('#sheet-save').addEventListener('click', () => {
         msg = '记下了，有血要尽快就医'; bad = true
       }
     } else if (mode === 'scoop') {
-      S.maint.scoopAt = Date.now(); addFeed('clean', `铲屎 · ${box}`)
+      S.maint.scoopAt = at; addFeed('clean', `铲屎 · ${box}`, '我', {}, at)
     } else {
-      S.maint.litterDays = 0; addFeed('clean', `全换猫砂 · ${box}`); msg = '全换好了，14 天后提醒你'
+      S.maint.litterDays = 0; addFeed('clean', `全换猫砂 · ${box}`, '我', {}, at); msg = '全换好了，14 天后提醒你'
     }
   } else if (sheetKind === 'water') {
     const mode = pick('wt-mode'), ml = Math.max(0, +$('#water-ml').value || 0)
-    if (mode === 'add' || mode === 'change') { S.water += ml; addFeed('water', `饮水机${mode === 'add' ? '加水' : '换水'} ${ml} ml`) }
-    if (mode === 'clean') { S.maint.cleanDays = 0; addFeed('water', '清洗饮水机'); msg = '洗干净啦，7 天后提醒你' }
-    if (mode === 'filter') { S.maint.filterDays = 0; addFeed('water', '饮水机换了新滤芯'); msg = '新滤芯，30 天后提醒你' }
+    if (mode === 'add' || mode === 'change') { S.water += ml; addFeed('water', `饮水机${mode === 'add' ? '加水' : '换水'} ${ml} ml`, '我', {}, at) }
+    if (mode === 'clean') { S.maint.cleanDays = 0; addFeed('water', '清洗饮水机', '我', {}, at); msg = '洗干净啦，7 天后提醒你' }
+    if (mode === 'filter') { S.maint.filterDays = 0; addFeed('water', '饮水机换了新滤芯', '我', {}, at); msg = '新滤芯，30 天后提醒你' }
   } else {
     const who = pick('fd-who'), g = Math.max(0, +$('#food-g').value || 0)
-    addFeed('food', `${who === 'both' ? '两只' : CATS[who].name} · ${pick('fd-type')} ${g} g`)
+    addFeed('food', `${who === 'both' ? '两只' : CATS[who].name} · ${pick('fd-type')} ${g} g`, '我', {}, at)
   }
+  // 异常和时间每次都重新选，避免下次误记
+  $$('[data-multi="lt-flags"] button').forEach(b => b.setAttribute('aria-pressed', 'false'))
+  $$('[data-single="when"] button').forEach((b, i) => b.setAttribute('aria-pressed', i === 0))
   closeSheet()
-  renderAll()
-  toast(msg, bad)
+  save(); renderAll()
+  toast(msg, bad, true)
 })
 
 let toastTimer
-function toast(text, bad = false) {
+function toast(text, bad = false, canUndo = false) {
   const t = $('#toast')
-  t.textContent = text; t.className = 'toast' + (bad ? ' bad' : ''); t.hidden = false
-  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.hidden = true, bad ? 4200 : 2200)
+  $('#toast-msg').textContent = text; $('#toast-undo').hidden = !canUndo
+  t.className = 'toast' + (bad ? ' bad' : ''); t.hidden = false
+  clearTimeout(toastTimer)
+  toastTimer = setTimeout(() => { t.hidden = true; undoSnap = null }, bad ? 6000 : canUndo ? 5000 : 2200)
 }
 
 function renderAll() { renderHome(); renderRecords() }
+load()
 renderAll(); renderHealth(); renderProfile(); renderTips(); renderTokens()
 go(location.hash.slice(1))
 
-// 模拟家人在另一台手机上记了一笔
-setTimeout(() => { S.litter.ng.poop++; addFeed('litter', '年糕 · 大便 · 正常', '爸爸'); renderAll() }, 9000)
+// 模拟家人在另一台手机上记了一笔（每天只演示一次）
+if (!S.simDone) setTimeout(() => {
+  S.simDone = true; S.litter.ng.poop++
+  addFeed('litter', '年糕 · 大便 · 正常', '爸爸', { cat: 'ng', poop: 1 })
+  save(); renderAll()
+}, 9000)
 setInterval(() => !$('#s-home').hidden && renderFeed(), 60000)
 </script>
