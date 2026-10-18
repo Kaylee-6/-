@@ -1,0 +1,247 @@
+@import 'tailwindcss';
+@import '@fontsource/cormorant-garamond/latin-300.css';
+@import '@fontsource/cormorant-garamond/latin-500.css';
+@import '@fontsource/cormorant-garamond/latin-300-italic.css';
+@import '@fontsource-variable/instrument-sans/wght.css';
+@import '@fontsource/ibm-plex-mono/latin-400.css';
+@import '@fontsource/ibm-plex-mono/latin-500.css';
+
+/*
+ * Layout concept: a quiet winter travel journal — snow-paper ground, navy ink,
+ * forest green for what is settled, champagne gold for what is still open.
+ */
+:root {
+  --bg: #f6f5f1;
+  --surface: #ffffff;
+  --surface-2: #efede7;
+  --ice: #d7e7ec;
+  --ink: #20354a;
+  --ink-2: #4a5d6e;
+  --muted: #74838f;
+  --line: #e3e1da;
+  --forest: #596c60;
+  --gold: #c1a682;
+  --gold-ink: #866c48;
+  --navy: #20354a;
+  --on-navy: #f6f5f1;
+  --danger: #a3584b;
+  --warn: #f3ede2;
+  --scrim: rgb(14 23 32 / 0.42);
+  --viz-1: #2a6fa8;
+  --viz-2: #c8902c;
+  --viz-3: #7a5cc4;
+  --viz-4: #2f8f5b;
+  --viz-5: #cf5b3c;
+  --viz-6: #9aa3ab;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #0e1720;
+    --surface: #15212c;
+    --surface-2: #1b2935;
+    --ice: #1f3444;
+    --ink: #e6ecef;
+    --ink-2: #b6c2cb;
+    --muted: #8b98a3;
+    --line: #263746;
+    --forest: #93ab9a;
+    --gold: #c9b08c;
+    --gold-ink: #d6bf9b;
+    --navy: #dce6ec;
+    --on-navy: #0e1720;
+    --danger: #d68f82;
+    --warn: #2a2620;
+    --scrim: rgb(0 0 0 / 0.6);
+    --viz-1: #4a8ad0;
+    --viz-2: #b5852a;
+    --viz-3: #9079de;
+    --viz-4: #33985f;
+    --viz-5: #d4683f;
+    --viz-6: #66737e;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme='dark'] {
+  --bg: #0e1720;
+  --surface: #15212c;
+  --surface-2: #1b2935;
+  --ice: #1f3444;
+  --ink: #e6ecef;
+  --ink-2: #b6c2cb;
+  --muted: #8b98a3;
+  --line: #263746;
+  --forest: #93ab9a;
+  --gold: #c9b08c;
+  --gold-ink: #d6bf9b;
+  --navy: #dce6ec;
+  --on-navy: #0e1720;
+  --danger: #d68f82;
+  --warn: #2a2620;
+  --scrim: rgb(0 0 0 / 0.6);
+  --viz-1: #4a8ad0;
+  --viz-2: #b5852a;
+  --viz-3: #9079de;
+  --viz-4: #33985f;
+  --viz-5: #d4683f;
+  --viz-6: #66737e;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ice: var(--ice);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-forest: var(--forest);
+  --color-gold: var(--gold);
+  --color-gold-ink: var(--gold-ink);
+  --color-navy: var(--navy);
+  --color-on-navy: var(--on-navy);
+  --color-danger: var(--danger);
+  --color-warn: var(--warn);
+
+  --font-display: 'Cormorant Garamond', 'Songti SC', 'Noto Serif CJK SC', 'Source Han Serif SC', serif;
+  --font-sans: 'Instrument Sans Variable', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB',
+    'Noto Sans CJK SC', 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+}
+
+@layer base {
+  html,
+  body {
+    background: var(--bg);
+    color: var(--ink);
+  }
+
+  body {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+    text-rendering: optimizeLegibility;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0 0 auto;
+    height: env(safe-area-inset-top, 0px);
+    z-index: 40;
+    background: var(--bg);
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  input,
+  select,
+  textarea,
+  button {
+    font: inherit;
+    color: inherit;
+  }
+}
+
+@layer components {
+  .tabular {
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .gutter {
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+
+  .field {
+    width: 100%;
+    min-width: 0;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 10px 12px;
+    font-size: 16px;
+    line-height: 1.4;
+    transition: border-color 0.15s;
+  }
+  .field:focus {
+    outline: none;
+    border-color: var(--gold);
+  }
+  .field::placeholder {
+    color: var(--muted);
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Diagonal hatch used for "estimate" amounts and swatches. */
+  .hatch {
+    background-image: repeating-linear-gradient(135deg, var(--gold) 0 2px, transparent 2px 6px);
+  }
+
+  .hero-text {
+    text-shadow: 0 1px 14px rgb(14 26 38 / 0.45);
+  }
+}
+
+@keyframes snowfall {
+  from {
+    transform: translate3d(0, -10%, 0);
+  }
+  to {
+    transform: translate3d(-3%, 110%, 0);
+  }
+}
+
+.snowfall {
+  animation: snowfall linear infinite;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .snowfall {
+    animation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
